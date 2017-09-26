@@ -50,7 +50,9 @@ var totalCorrect = 0;
 var totalIncorrect = 0;
 var clockRunning = false;
 var q = 0;
+var index;
 
+// On page load
 $( document ).ready(function() {
     console.log( "ready!" );
     $( '.question, .answers, .score, .timer').hide();
@@ -61,16 +63,36 @@ $( '#startButton' ).on("click", function() {
 	gamePlay();
 })
 
+//Play game
 function gamePlay() {
+	$( '.display' ).empty();
+	index = 0;
+	console.log("On question #" + q);
 	$( '.startGame, .score' ).hide();
 	$( '.question, .answers, .timer' ).show();
 	$( '.question' ).html(questions[q].question);
-
-
+		// Creates a button for all four answer options
 		for (var i = 0; i < questions[q].options.length; i++) {
-			$( '.answers' ).append("<button>" + questions[q].options[i] + "</button> <br><br>");
+			$( '.answers' ).append("<button class='option'>" + questions[q].options[i] + "</button> <br><br>");
 		}
+		//Log answer selected
+	$( '.option' ).on("click", function() {
+		console.log("Option clicked!");
+		var index = $( ".option" ).index( this );
+		console.log("That was div index #" + index );
+		console.log(questions[q].answer);
+		//Winning condition
+		if (index = questions[q].answer) {
+					console.log("Correct");
+					$( '.display' ).html("Correct!");
+					totalCorrect++;
+					$( '.question, .answers, .score, .timer').empty();
+					q++;
+					setTimeout(gamePlay,2000);
+		};
+	});
 }
+
 
 
 
