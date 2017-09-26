@@ -5,75 +5,136 @@
 // Start over resets the game
 
 var questions = [
-{	question: "What color is the sky?",
-	answer: "Ansdfa",
-	option1: "Ansdfa",
-	option2: "Bdsafagdad",
-	option3: "asdfsd",
-	option4: "agdgrhtrD"
+{	question: "What did Ted get a tattoo of on his lower back?",
+	answer: 3,
+	options: ["Red boots", "An Iguana", "The McLaren's Logo", "A Butterfly"]
 },
-{	question: "What color does the sun appear?",
-	option1: "A",
-	option2: "B",
-	option3: "C",
-	option4: "D",
-	answer: "C"
-}
+{	question: "What type of animal was on the tie Barney had to wear when he lost a bet?",
+	answer: 0,
+	options: ["Ducks", "Bunnies", "Hedgehogs", "Bears"]
+},
+{	question: "What's the name of Robin's rockstar alter ego",
+	answer: 1,
+	options: ["Princess Penelope", "Robin Sparkles", "Robin Speckles", "Just Robin"]
+},
+{	question: "What did Marshal write a funeral song for?",
+	answer: 2,
+	options: ["His favorite band", "Robot Wrestling", "A cat", "The bird that flew into their window"]
+},
+{	question: "Who annoys Robin the most at work?",
+	answer: 1,
+	options: ["Daphne", "Patrice", "Sandy Rivers", "Loretta Stinson"]
+},
+{	question: "What is Ted &quot;totally pulling off&quot;?",
+	answer: 0,
+	options: ["Red boots", "A women's sweater", "A V Neck", "A lower back tattoo"]
+},
+{	question: "Who loves boats, boats, boats!!!?",
+	answer: 3,
+	options: ["Betty", "Bonnie", "Beatrice", "Becky"]
+},
+{	question: "Which of Robin's boyfriends did the gang compare to a dog?",
+	answer: 1,
+	options: ["Spot", "Scooby", "Ted", "Nick"]
+},
+{	question: "What is Marshall's mothers' name?",
+	answer: 2,
+	options: ["Janet", "Susan", "Judy", "Stella"]
+},
+{	question: "Which up and coming neighborhood did Lily and Marshall move to?",
+	answer: 2,
+	options: ["RoBaLiMa", "McLaStNo", "DoWiSeTrePla", "GreenPoint"]
+},
 ];
 var totalCorrect = 0;
 var totalIncorrect = 0;
 var clockRunning = false;
-var stopwatch = {
+var q = 0;
 
-  time: 0,
+$( document ).ready(function() {
+    console.log( "ready!" );
+    $( '.question, .answers, .score, .timer').hide();
 
-  reset: function() {
-    stopwatch.time = 0;
-    $("#display").html("00:00");
-  },
-  start: function() {
-    if (!clockRunning) {
-        intervalId = setInterval(stopwatch.count, 1000);
-        clockRunning = true;
-    }
-  },
-  stop: function() {
-    clearInterval(intervalId);
-    clockRunning = false;
-  },
-  timeConverter: function(t) {
-    var minutes = Math.floor(t / 60);
-    var seconds = t - (minutes * 60);
-    if (seconds < 10) {
-      seconds = "0" + seconds;
-    }
-    if (minutes === 0) {
-      minutes = "00";
-    }
-    else if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    return minutes + ":" + seconds;
-  }
-};
-
-function gamePlay() {
-	$( '.startGame' ).hide();
-	stopwatch.start();
-	$( '.question' ).html(questions[0].question);
-//Revisit: tried to do a for loop here but wasn't working
-	$( '.answers' ).append("<button>" + questions[0].option1 + "</button> <br><br>");
-	$( '.answers' ).append("<button>" + questions[0].option2 + "</button> <br><br>");
-	$( '.answers' ).append("<button>" + questions[0].option3 + "</button> <br><br>");
-	$( '.answers' ).append("<button>" + questions[0].option4 + "</button> <br><br>");
-	clockRunning = true;
-}
+});
 
 $( '#startButton' ).on("click", function() {
 	gamePlay();
 })
 
+function gamePlay() {
+	$( '.startGame, .score' ).hide();
+	$( '.question, .answers, .timer' ).show();
+	$( '.question' ).html(questions[q].question);
+
+
+		for (var i = 0; i < questions[q].options.length; i++) {
+			$( '.answers' ).append("<button>" + questions[q].options[i] + "</button> <br><br>");
+		}
+}
 
 
 
 
+
+
+
+
+
+
+
+
+
+/*
+var timer = new (function() {
+
+    var $countdown;
+    var $form;
+    var incrementTime = 70;
+    var currentTime = 30000; // 
+    
+    $(function() {
+        $countdown = $('#countdown');
+        exTimer = $.timer(updateTimer, incrementTime, true);
+
+        // Setup form
+        $form = $('#example2form');
+        $form.bind('submit', function() {
+            Example2.resetCountdown();
+            return false;
+        });
+
+    });
+
+    function updateTimer() {
+
+        // Output timer position
+        var timeString = formatTime(currentTime);
+        $countdown.html(timeString);
+
+        // If timer is complete, trigger alert
+        if (currentTime == 0) {
+            Example2.Timer.stop();
+            alert('Example 2: Countdown timer complete!');
+            Example2.resetCountdown();
+            return;
+        }
+
+        // Increment timer position
+        currentTime -= incrementTime;
+        if (currentTime < 0) currentTime = 0;
+
+    }
+
+    this.resetCountdown = function() {
+
+        // Get time from form
+        var newTime = parseInt($form.find('input[type=text]').val()) * 1000;
+        if (newTime > 0) {currentTime = newTime;}
+
+        // Stop and reset timer
+        Example2.Timer.stop().once();
+
+    };
+
+});
+*/
