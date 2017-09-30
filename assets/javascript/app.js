@@ -47,62 +47,64 @@ var questions = [
 ];
 var totalCorrect = 0;
 var totalIncorrect = 0;
+var unAnswered = 0;
 var clockRunning = false;
 var q = 0;
-var timeLimit = 5;
+var timeLimit = 10;
 var timer;
 
-// On page load
 $( document ).ready(function() {
     console.log( "ready!" );
     $( '.question, .answers, .score, .timer').hide();
-
 });
 
-//Timer function
+$( '#startButton' ).on("click", function() {
+	gamePlay();
+})
+
 function startTimer()
 {
 	timeLimit--;
 	$( '.timer' ).html(timeLimit + " seconds left");
 	if (timeLimit === 0) {
 		clearInterval(timer);
-		timeLimit = 5;
+		timeLimit = 10;
 		q++;
+		unAnswered++;
 		gamePlay();
 	}
 }
 
-//When start button is pressed
-
-$( '#startButton' ).on("click", function() {
-	gamePlay();
-})
-
 function gamePlay() {
-	$( '.timer' ).html(timeLimit + " seconds left");
-	timer = setInterval (startTimer, 1000 );
-	$( '.display, .answers' ).empty();
-	$( '.startGame, .score' ).hide();
-	$( '.question, .answers, .timer' ).show();
-	$( '.question' ).html(questions[q].question);
-	// Creates a button for all four answer options
-	for (var i = 0; i < questions[q].options.length; i++) {
-		$( '.answers' ).append("<button class='option'>" + questions[q].options[i] + "</button> <br><br>");
+	if (q > 9) {
+		endGame();
+	} else {
+		$( '.timer' ).html(timeLimit + " seconds left");
+		timer = setInterval (startTimer, 1000 );
+		$( '.display, .answers' ).empty();
+		$( '.startGame, .score' ).hide();
+		$( '.question, .answers, .timer' ).show();
+		$( '.question' ).html(questions[q].question);
+		// Creates a button for all four answer options
+		for (var i = 0; i < questions[q].options.length; i++) {
+			$( '.answers' ).append("<button class='option btn btn-default'>" + questions[q].options[i] + "</button> <br><br>");
+		}
+		console.log("Q:" + q);
 	}
-	console.log("Q:" + q);
 }
 
 function endGame() {
+	console.log("endGame started");
 	$( '.startGame, .answers, .question, .timer' ).hide();
 	$( '.display, .score' ).show();
-	$( '.display' ).html("You're done!");
-	$( '.score' ).html("Total Correct: " + totalCorrect + "<br> Total Incorrect: " + totalIncorrect);
-
+	$( '.display' ).html("GAME OVER");
+	$( '.score' ).html("<b>Total Correct: </b>" + totalCorrect + "<br><b>Total Incorrect: </b>" + totalIncorrect + "<br><b>Unanswered: </b>" + unAnswered);
 }
-		//Log answer selected
+
+//Log index of answer selected
 $( '.answers' ).on("click",".option", function() {
 	var index = $( ".option" ).index(this);
-	//Winning condition
+	//Winning/Losing conditions
 	if (index === questions[q].answer) {
 		$( '.display' ).html("Correct!");
 		totalCorrect++;
@@ -112,10 +114,7 @@ $( '.answers' ).on("click",".option", function() {
 	}
 	$( '.question, .answers, .timer').empty();
 	q++;
-	if (q > 9) {
-		endGame();
-	}
-	setTimeout(gamePlay,2000);
+	setTimeout(gamePlay,1000);
 	clearInterval(timer);
-	timeLimit = 5;
+	timeLimit = 10;
 });
