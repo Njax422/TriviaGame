@@ -1,4 +1,3 @@
-//Q1: Timer counting down from 30 seconds, question, 4 choice buttons
 // Upon clicking an answer, display correct or incorrect with image for 5 secs
 // Also move forward after 30 secs up
 // When done with questions, show total of correct and incorrect answers
@@ -50,7 +49,8 @@ var totalCorrect = 0;
 var totalIncorrect = 0;
 var clockRunning = false;
 var q = 0;
-var index;
+var timeLimit = 5;
+var timer;
 
 // On page load
 $( document ).ready(function() {
@@ -59,104 +59,63 @@ $( document ).ready(function() {
 
 });
 
+//Timer function
+function startTimer()
+{
+	timeLimit--;
+	$( '.timer' ).html(timeLimit + " seconds left");
+	if (timeLimit === 0) {
+		clearInterval(timer);
+		timeLimit = 5;
+		q++;
+		gamePlay();
+	}
+}
+
+//When start button is pressed
+
 $( '#startButton' ).on("click", function() {
 	gamePlay();
 })
 
-//Play game
 function gamePlay() {
-	$( '.display' ).empty();
-	index = 0;
-	console.log("On question #" + q);
+	$( '.timer' ).html(timeLimit + " seconds left");
+	timer = setInterval (startTimer, 1000 );
+	$( '.display, .answers' ).empty();
 	$( '.startGame, .score' ).hide();
 	$( '.question, .answers, .timer' ).show();
 	$( '.question' ).html(questions[q].question);
-		// Creates a button for all four answer options
-		for (var i = 0; i < questions[q].options.length; i++) {
-			$( '.answers' ).append("<button class='option'>" + questions[q].options[i] + "</button> <br><br>");
-		}
-		//Log answer selected
-	$( '.option' ).on("click", function() {
-		console.log("Option clicked!");
-		var index = $( ".option" ).index( this );
-		console.log("That was div index #" + index );
-		console.log(questions[q].answer);
-		//Winning condition
-		if (index = questions[q].answer) {
-					console.log("Correct");
-					$( '.display' ).html("Correct!");
-					totalCorrect++;
-					$( '.question, .answers, .score, .timer').empty();
-					q++;
-					setTimeout(gamePlay,2000);
-		};
-	});
+	// Creates a button for all four answer options
+	for (var i = 0; i < questions[q].options.length; i++) {
+		$( '.answers' ).append("<button class='option'>" + questions[q].options[i] + "</button> <br><br>");
+	}
+	console.log("Q:" + q);
 }
 
+function endGame() {
+	$( '.startGame, .answers, .question, .timer' ).hide();
+	$( '.display, .score' ).show();
+	$( '.display' ).html("You're done!");
+	$( '.score' ).html("Total Correct: " + totalCorrect + "<br> Total Incorrect: " + totalIncorrect);
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-var timer = new (function() {
-
-    var $countdown;
-    var $form;
-    var incrementTime = 70;
-    var currentTime = 30000; // 
-    
-    $(function() {
-        $countdown = $('#countdown');
-        exTimer = $.timer(updateTimer, incrementTime, true);
-
-        // Setup form
-        $form = $('#example2form');
-        $form.bind('submit', function() {
-            Example2.resetCountdown();
-            return false;
-        });
-
-    });
-
-    function updateTimer() {
-
-        // Output timer position
-        var timeString = formatTime(currentTime);
-        $countdown.html(timeString);
-
-        // If timer is complete, trigger alert
-        if (currentTime == 0) {
-            Example2.Timer.stop();
-            alert('Example 2: Countdown timer complete!');
-            Example2.resetCountdown();
-            return;
-        }
-
-        // Increment timer position
-        currentTime -= incrementTime;
-        if (currentTime < 0) currentTime = 0;
-
-    }
-
-    this.resetCountdown = function() {
-
-        // Get time from form
-        var newTime = parseInt($form.find('input[type=text]').val()) * 1000;
-        if (newTime > 0) {currentTime = newTime;}
-
-        // Stop and reset timer
-        Example2.Timer.stop().once();
-
-    };
-
+}
+		//Log answer selected
+$( '.answers' ).on("click",".option", function() {
+	var index = $( ".option" ).index(this);
+	//Winning condition
+	if (index === questions[q].answer) {
+		$( '.display' ).html("Correct!");
+		totalCorrect++;
+	} else {
+		$( '.display' ).html("Eh. Wrong!");
+		totalIncorrect++;
+	}
+	$( '.question, .answers, .timer').empty();
+	q++;
+	if (q > 9) {
+		endGame();
+	}
+	setTimeout(gamePlay,2000);
+	clearInterval(timer);
+	timeLimit = 5;
 });
-*/
